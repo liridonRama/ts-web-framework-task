@@ -1,5 +1,4 @@
-
-type Callback = () => void;
+import { Callback } from "../types/Callback"
 
 export class Eventing {
   private events: { [key: string]: Callback[] } = {};

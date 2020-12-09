@@ -1,9 +1,7 @@
 import axios, { AxiosPromise } from "axios"
 import { nanoid } from "nanoid";
 
-interface HasId {
-  id?: string;
-}
+import { HasId } from "../interfaces/HasId"
 
 export class Sync<T extends HasId> {
   constructor(private rootUrl: string) { }

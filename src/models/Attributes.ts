@@ -5,6 +5,10 @@ export class Attributes<T> {
     return this.data[key];
   }
 
+  getAll = (): T => {
+    return this.data;
+  }
+
   set = (update: T): void => {
     this.data = { ...this.data, ...update };
   }
