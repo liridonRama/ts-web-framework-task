@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 import { HasId } from "../interfaces/HasId"
 
-export class Sync<T extends HasId> {
+export class ApiSync<T extends HasId> {
   constructor(private rootUrl: string) { }
 
   fetch = (id: string): AxiosPromise => {
