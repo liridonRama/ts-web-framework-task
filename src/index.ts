@@ -1,7 +1,10 @@
-import { User } from "./models/User";
+import { User } from './models/User';
 
-const user = new User({ id: "12" });
 
-user.on("save", () => console.log(user));
+const coll = User.buildUserCollection();
 
-user.save();
+coll.on("change", () => {
+  console.log(coll);
+})
+
+coll.fetch();

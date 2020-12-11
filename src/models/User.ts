@@ -3,6 +3,7 @@ import { Model } from './Model';
 import { Attributes } from "./Attributes";
 import { Eventing } from "./Eventing";
 import { ApiSync } from "./ApiSync"
+import { Collection } from './Collection';
 
 
 const ROOT_URL = "http://localhost:3000";
@@ -15,10 +16,11 @@ export class User extends Model<UserProps> {
       new ApiSync<UserProps>(ROOT_URL),
     )
   }
+
+  static buildUserCollection(): Collection<User, UserProps> {
+    return new Collection<User, UserProps>(
+      `${ROOT_URL}/users`,
+      (json: UserProps) => User.buildUser(json)
+    )
+  }
 }
-
-const user = User.buildUser({ id: "1" });
-
-user.on("change", () => console.log("something changed"));
-
-user.fetch();
