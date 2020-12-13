@@ -1,25 +1,22 @@
+import { View } from "./View";
 import { User } from '../models/User';
+import { UserProps } from '../interfaces/UserProps';
 
-export class UserForm {
-  constructor(public parent: Element, public model: User) {
-    this.bindModel();
-  }
-
-  bindModel() {
-    this.model.on("change", () => this.render());
-  }
-
-  onButtonCLick(): void {
-    console.log("hi there");
-  }
-
+export class UserForm extends View<User, UserProps> {
   eventsMap = (): { [key: string]: () => void } => {
     return {
       "mouseover:h1": this.onHeaderHover,
       "click:.set-age": this.onSetAgeClick,
       "click:.set-name": this.onSetNameClick,
+      "click:.save-model": this.onSaveModel,
     }
   }
+
+
+  onHeaderHover() {
+    console.log("hoveroni");
+  }
+
   onSetAgeClick = (): void => {
     this.model.setRandomAge();
     console.log(this.model.get("age"))
@@ -33,44 +30,19 @@ export class UserForm {
     }
   }
 
+  onSaveModel = (): void => {
+    this.model.save();
+  }
+
   template(): string {
     return `
       <div> 
         <h1>User Form</h1>
-        <div>Username: ${this.model.get("name")}</div>
-        <div>Age: ${this.model.get("age")}</div>
-        <input />
+        <input placeholder="${this.model.get("name")}" />
         <button class="set-name">Set Name</button>
         <button class="set-age">Set Random Age</button>
+        <button class="save-model">Save Model</button>
       </div>
     `;
-  }
-
-  onHeaderHover() {
-    console.log("hoveroni");
-  }
-
-  bindEvents(fragment: DocumentFragment): void {
-    const eventsMap = this.eventsMap();
-    Object.keys(eventsMap).forEach(eventKey => {
-      const [eventName, selector] = eventKey.split(":");
-      fragment.querySelectorAll(selector).forEach(element => {
-        element.addEventListener(eventName, eventsMap[eventKey])
-      });
-    });
-  }
-
-  render(): void {
-    if (!this.parent) {
-      throw new Error("no proper parent element was passed");
-    }
-
-    this.parent.innerHTML = "";
-
-    const templateElement = document.createElement("template");
-    templateElement.innerHTML = this.template();
-
-    this.bindEvents(templateElement.content);
-    this.parent.append(templateElement.content);
   }
 }
