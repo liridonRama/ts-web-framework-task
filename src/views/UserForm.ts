@@ -1,7 +1,13 @@
 import { User } from '../models/User';
 
 export class UserForm {
-  constructor(public parent: Element | null, public model: User) { }
+  constructor(public parent: Element, public model: User) {
+    this.bindModel();
+  }
+
+  bindModel() {
+    this.model.on("change", () => this.render());
+  }
 
   onButtonCLick(): void {
     console.log("hi there");
@@ -11,11 +17,20 @@ export class UserForm {
     return {
       "mouseover:h1": this.onHeaderHover,
       "click:.set-age": this.onSetAgeClick,
+      "click:.set-name": this.onSetNameClick,
     }
   }
   onSetAgeClick = (): void => {
     this.model.setRandomAge();
     console.log(this.model.get("age"))
+  }
+
+  onSetNameClick = (): void => {
+    const name = this.parent?.querySelector("input")?.value;
+
+    if (name) {
+      this.model.set({ name });
+    }
   }
 
   template(): string {
@@ -25,7 +40,7 @@ export class UserForm {
         <div>Username: ${this.model.get("name")}</div>
         <div>Age: ${this.model.get("age")}</div>
         <input />
-        <button>Click me</button>
+        <button class="set-name">Set Name</button>
         <button class="set-age">Set Random Age</button>
       </div>
     `;
@@ -49,6 +64,8 @@ export class UserForm {
     if (!this.parent) {
       throw new Error("no proper parent element was passed");
     }
+
+    this.parent.innerHTML = "";
 
     const templateElement = document.createElement("template");
     templateElement.innerHTML = this.template();
